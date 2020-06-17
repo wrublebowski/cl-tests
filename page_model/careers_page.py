@@ -20,9 +20,11 @@ class CareersPage(BasePage):
 
     def look_for_job(self):
         self.accept_cookie()
+        time.sleep(1)
         self.click_open_positions()
         time.sleep(2)
         self.click_job1()
         self.scroll_page(600)
         time.sleep(2)
+        self.take_screenshot("job requirements")
         self.verify_job_req()

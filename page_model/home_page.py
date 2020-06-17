@@ -17,9 +17,9 @@ class HomePage(BasePage):
             time.sleep(1)
             # click by actions.method, remember about .perform()!
             action1.move_to_element(joinus_link).click().perform()
-            print('item clicked successfully!')
+            self.log.info('Item clicked successfully with mouse hoovering!')
         except:
-            print('action with Mouse Hoovering failed!')
+            self.log.info('action with Mouse Hoovering failed!')
 
     def click_on_people(self):
 
@@ -32,9 +32,9 @@ class HomePage(BasePage):
             time.sleep(1)
             # click by actions.method, remember about .perform()!
             action1.move_to_element(people_link).click().perform()
-            print('item clicked successfully!')
+            self.log.info('Item clicked successfully with mouse hoovering!')
         except:
-            print('action with Mouse Hoovering failed!')
+            self.log.info('action with Mouse Hoovering failed!')
 
     def click_on_search(self):
         self.click_element(*HomePageLocators._search_tool)

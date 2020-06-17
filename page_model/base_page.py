@@ -1,9 +1,17 @@
+import logging
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-# from acceptance_tests.locators.base_locators import BasePageLocators
+from utilities import custom_logger as cl
+
+from traceback import print_stack
+import time
+import os
 
 
 class BasePage:
+
+    log = cl.customLogger(logging.DEBUG)
+
     def __init__(self, driver):
         self.driver = driver
 
@@ -11,7 +19,7 @@ class BasePage:
         '''
         :return: base URL, notice no ending slash
         '''
-        print(f'Go to URL: {URL}')
+        self.log.info(f'Go to URL: {URL}')
         return self.driver.get(URL)
 
 
@@ -33,7 +41,7 @@ class BasePage:
         Scrolls down current page by <distance> pixels.
         For scrolling up provide negative integer
         '''
-        print(f'Scrolling page by {distance} px.')
+        self.log.info(f'Scrolling page by {distance} px.')
         return self.driver.execute_script(f"window.scrollBy(0, {distance});")
 
     # def buttons_list(self):
@@ -56,7 +64,7 @@ class BasePage:
         as arguments you provide *tuple
         '''
         self.driver.find_element(locatorType, locator).click()
-        print(f'item with locator: {locator} clicked.')
+        self.log.info(f'Item with locator: {locator} clicked.')
 
     def is_element_displayed(self, locatorType, locator):
         '''
@@ -64,7 +72,29 @@ class BasePage:
         as arguments you provide *tuple
         '''
         self.driver.find_element(locatorType, locator).is_displayed()
-        print('Verifying is element displayed.')
+        self.log.info('Verifying is element displayed.')
+
+    def take_screenshot(self, resultMessage):
+        '''
+        Takes screenshot of a currently open web page
+        '''
+
+        # we create a path working on every computer
+        fileName = resultMessage + '.' + str(round(time.time() * 1000)) + '.png'
+        screenShotsDirectory = '../screenshots/'
+        relativeFileName = screenShotsDirectory + fileName
+        currentDirectory = os.path.dirname(__file__)
+        destinationFile = os.path.join(currentDirectory, relativeFileName)
+        destinationDirectory = os.path.join(currentDirectory, screenShotsDirectory)
+
+        try:
+            if not os.path.exists(destinationDirectory):
+                os.makedirs(destinationDirectory)
+            self.driver.save_screenshot(destinationFile)
+            self.log.info('Screenshot saved to directory: ' + destinationFile)
+        except:
+            self.log.error("### Exception Occurred - taking screenshot")
+        print_stack()
 
     # def send_keys_to_element(self, locatorType, locator, text):
     #     element = self.driver.find_element(locatorType, locator)
